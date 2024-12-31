@@ -5,7 +5,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    image: ghcr.io/storyrowio/server:latest
+    image: ghcr.io/storyrowio/kickof-server:1.0.0
     ports:
       - "8000:8000"
     environment:
@@ -17,8 +17,8 @@ services:
       context: ./web
       dockerfile: Dockerfile
       cache_from:
-        - ghcr.io/storyrowio/web:latest
-    image: ghcr.io/storyrowio/web:latest
+        - ghcr.io/storyrowio/kickof-web:1.0.0
+    image: ghcr.io/storyrowio/kickof-web:1.0.0
     ports:
       - "3000:3000"
     environment:
