@@ -6,7 +6,7 @@ env:
   REGISTRY: ghcr.io
   # github.repository already includes your username/organization and repository name
   BACKEND_IMAGE_NAME: ${{ github.repository }}/server
-  FRONTEND_IMAGE_NAME: ${{ github.repository }}/client
+  FRONTEND_IMAGE_NAME: ${{ github.repository }}/web
   
 jobs:
   build:
@@ -32,7 +32,7 @@ jobs:
         with:
           context: ./server  # adjust this to your backend directory
           push: true
-          tags: ${{ env.BACKEND_IMAGE }}:latest
+          tags: ${{ env.BACKEND_IMAGE_NAME }}:latest
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
 
@@ -42,12 +42,12 @@ jobs:
         with:
           context: ./web  # adjust this to your frontend directory
           push: true
-          tags: ${{ env.FRONTEND_IMAGE }}:latest
+          tags: ${{ env.FRONTEND_IMAGE_NAME }}:latest
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
 
       # Optional: Display image URLs
       - name: Image URLs
         run: |
-          echo "Backend image: ${{ env.BACKEND_IMAGE }}:latest"
-          echo "Frontend image: ${{ env.FRONTEND_IMAGE }}:latest"
+          echo "Backend image: ${{ env.BACKEND_IMAGE_NAME }}:latest"
+          echo "Frontend image: ${{ env.FRONTEND_IMAGE_NAME }}:latest"
