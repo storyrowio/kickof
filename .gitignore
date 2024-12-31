@@ -1,0 +1,6 @@
+.idea
+server/.idea
+server/.env
+web/.idea
+web/.next
+web/node_modules

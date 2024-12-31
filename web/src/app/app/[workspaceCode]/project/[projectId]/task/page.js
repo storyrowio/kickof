@@ -1,0 +1,74 @@
+'use client'
+
+import {Box, Button, Card, CardContent, Stack, Typography} from "@mui/material";
+import {AddRounded} from "@mui/icons-material";
+import TaskKanban from "components/pages/task/TaskKanban";
+import {useDispatch, useSelector} from "store";
+import {ThemeActions} from "store/slices/ThemeSlice";
+import TaskForm from "components/pages/task/TaskForm";
+import StateForm from "components/pages/project/state/StateForm";
+import StateService from "services/StateService";
+import useSWR from "swr";
+import {DefaultSort} from "constants/constants";
+
+
+
+export default function Task() {
+    const dispatch = useDispatch();
+    const { workspace, project } = useSelector(state => state.app);
+
+    const { data: resState, isLoading: loadingColumn, mutate } = useSWR(
+        project?.id ? '/api/state' : null,
+        () => StateService.getStatesByQuery({
+            project: project?.id,
+            sort: DefaultSort.oldest.value
+        })
+    )
+
+    const renderTaskForm = () => {
+        return <TaskForm onClose={() => {
+            dispatch(ThemeActions.setRightSidebarOpen(false));
+            dispatch(ThemeActions.setRightSidebarContent(null))
+        }}/>;
+    };
+
+    const handleTask = () => {
+        dispatch(ThemeActions.setRightSidebarOpen(true));
+        dispatch(ThemeActions.setRightSidebarContent(renderTaskForm()))
+    };
+
+    const handleState = () => {
+        dispatch(ThemeActions.setRightSidebarOpen(true));
+        dispatch(ThemeActions.setRightSidebarContent(<StateForm/>));
+    };
+
+    return (
+        <>
+            <Card>
+                <CardContent>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Typography variant="h4">All Tasks</Typography>
+                        <Stack direction="row" spacing={3}>
+                            <Button
+                                size="small"
+                                startIcon={<AddRounded/>}
+                                variant="contained"
+                                onClick={handleTask}>
+                                Add Task
+                            </Button>
+                            <Button
+                                size="small"
+                                color="secondary"
+                                startIcon={<AddRounded/>}
+                                variant="contained"
+                                onClick={handleState}>
+                                Add State
+                            </Button>
+                        </Stack>
+                    </Stack>
+                </CardContent>
+            </Card>
+            <TaskKanban states={resState?.data}/>
+        </>
+    )
+}
