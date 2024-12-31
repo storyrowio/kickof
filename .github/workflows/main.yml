@@ -38,8 +38,6 @@ jobs:
         uses: hoverkraft-tech/compose-action@v2.0.1
         with:
           compose-file: "./docker-compose.yml"
-          compose-command: up --build --push
-          compose-env: |
-            REGISTRY=ghcr.io
-            OWNER=${{ env.OWNER }}
-            TAG=latest
+          compose-command: |
+            build
+            push
