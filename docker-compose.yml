@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  backend:
+  server:
     image: kickof/server:latest
     ports:
       - "8000:8000"
@@ -9,7 +9,7 @@ services:
       - ENV=production
     restart: unless-stopped
 
-  frontend:
+  web:
     image: kickof/web:latest
     ports:
       - "3000:3000"
