@@ -39,7 +39,3 @@ jobs:
         with:
           compose-file: "./docker-compose.yml"
           compose-command: up --build --push
-          compose-env: |
-            REGISTRY=ghcr.io
-            OWNER=${{ env.OWNER }}
-            TAG=latest
