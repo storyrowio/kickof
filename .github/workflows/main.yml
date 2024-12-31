@@ -4,9 +4,8 @@ on: [push]
 
 env:
   REGISTRY: ghcr.io
-  # github.repository already includes your username/organization and repository name
-  BACKEND_IMAGE_NAME: ${{ github.repository }}/server
-  FRONTEND_IMAGE_NAME: ${{ github.repository }}/web
+  BACKEND_IMAGE_NAME: ${{ github.repository }}/kickof-server
+  FRONTEND_IMAGE_NAME: ${{ github.repository }}/kickof-web
   
 jobs:
   build:
@@ -34,24 +33,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Run docker-compose
-        uses: hoverkraft-tech/compose-action@v2.0.1
-        with:
-          compose-file: "./docker-compose.yml"
-          compose-command: |
-            build
-            push --progress=plain
-            
-      - name: Verify Push Status
+      - name: Build and Push Images
         run: |
-          echo "Verifying push status..."
-          docker images "${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}" || echo "Backend image push failed"
-          docker images "${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}" || echo "Frontend image push failed"
-        continue-on-error: true
-
-      - name: Final Push Status
-        if: ${{ success() }}
-        run: echo "Push completed successfully for both images!"
-      - name: Handle Failure
-        if: ${{ failure() }}
-        run: echo "Push failed. Check the logs for details."
+          # Build and tag images
+          docker-compose build
+          
+          # Push images individually
+          docker push "${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}"
+          docker push "${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}"
