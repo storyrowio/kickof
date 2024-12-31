@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "store";
 import Theme from "theme";
 import {SessionProvider} from "next-auth/react";
 import BlankLayout from "layouts/BlankLayout";
-import {useEffect} from "react";
+import {Suspense, useEffect} from "react";
 import Helper from "utils/helper";
 import AuthLayout from "layouts/auth/AuthLayout";
 import AppLayout from "layouts/app/AppLayout";
@@ -55,12 +55,14 @@ export default function RootApp({ children }) {
     }, []);
 
     return (
-        <SessionProvider>
-            <Theme mode={themeSetting.mode}>
-                <Layout>
-                    {children}
-                </Layout>
-            </Theme>
-        </SessionProvider>
+        <Suspense>
+            <SessionProvider>
+                <Theme mode={themeSetting.mode}>
+                    <Layout>
+                        {children}
+                    </Layout>
+                </Theme>
+            </SessionProvider>
+        </Suspense>
     )
 }
