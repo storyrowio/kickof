@@ -2,21 +2,28 @@ version: '3.8'
 
 services:
   server:
-    image: kickof/server:latest
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: ${REGISTRY}/${OWNER}/server:${TAG}
     ports:
       - "8000:8000"
     environment:
-      - ENV=production
+      - NODE_ENV=production
     restart: unless-stopped
 
   web:
-    image: kickof/web:latest
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      cache_from:
+        - ${REGISTRY}/${OWNER}/web:${TAG}
+    image: ${REGISTRY}/${OWNER}/web:${TAG}
     ports:
       - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://server:8000
     depends_on:
       - server
-    environment:
-      - APP_URL=http://frontend:3000
-      - API_URL=http://server:8000
-      - NEXTAUTH_URL=http://frontend:3000
     restart: unless-stopped
