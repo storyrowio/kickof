@@ -8,7 +8,7 @@ const Instance = axios.create({
     baseURL: publicRuntimeConfig.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL
 });
 
-console.log("Api Url", process.env.NEXT_PUBLIC_API_URL, process.env.API_URL)
+console.log("Api Url", process.env.NEXT_PUBLIC_API_URL, process.env.API_URL, publicRuntimeConfig)
 Instance.interceptors.request.use(
     async (config) => {
         const token = await AppStorage.GetItem('x-token');
