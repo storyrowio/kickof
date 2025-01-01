@@ -15,7 +15,12 @@ COPY . .
 # Set environment variables
 ENV NODE_ENV=development
 ENV PORT=3000
-ENV API_URL=http://localhost:8100/api
+ENV NEXT_PUBLIC_APP_URL=http://localhost:3001
+ENV NEXT_PUBLIC_API_URL=https://kickof-server.onrender.com/api
+ENV API_URL=https://kickof-server.onrender.com/api
+
+RUN echo "Build time environment development:"
+RUN printenv | grep NEXT_PUBLIC_API_URL
 
 # Expose port
 EXPOSE 3000
@@ -43,7 +48,12 @@ RUN npm run build
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=3000
-ENV API_URL=http://localhost:8100/api
+ENV NEXT_PUBLIC_APP_URL=https://kickof-web.onrender.com
+ENV NEXT_PUBLIC_API_URL=https://kickof-server.onrender.com/api
+ENV API_URL=https://kickof-server.onrender.com/api
+
+RUN echo "Build time environment production:"
+RUN printenv | grep NEXT_PUBLIC_API_URL
 
 # Expose port
 EXPOSE 3000
