@@ -14,7 +14,8 @@ import AuthService from "services/AuthService";
 import {AppActions} from "store/slices/AppSlice";
 import ProjectService from "services/ProjectService";
 
-export default function RootApp({ children }) {
+const RootApp = ({ children, ...props }) => {
+    console.log("Props", props);
     const pathname = usePathname();
     const params = useParams();
     const dispatch = useDispatch();
@@ -66,3 +67,13 @@ export default function RootApp({ children }) {
         </Suspense>
     )
 }
+
+export function getServerSideProps() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL
+    console.log('Api url from server', apiUrl)
+    return {
+        props: { apiUrl },
+    }
+}
+
+export default RootApp;
