@@ -55,6 +55,9 @@ ENV API_URL=https://kickof-server.onrender.com/api
 RUN echo "Build time environment production:"
 RUN printenv | grep NEXT_PUBLIC_API_URL
 
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 # Expose port
 EXPOSE 3000
 
