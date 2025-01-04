@@ -12,9 +12,6 @@ RUN npm install
 # Copy source code
 COPY . .
 
-RUN echo "Build time environment development:"
-RUN printenv | grep NEXT_PUBLIC_API_URL
-
 # Expose port
 EXPOSE 3000
 
@@ -36,9 +33,6 @@ RUN npm install --production
 COPY . .
 RUN rm -f .env .env.* .env-*
 RUN rm -rf .git .gitignore
-
-RUN echo "Build time environment production:"
-RUN printenv | grep NEXT_PUBLIC_API_URL
 
 # Build the application
 RUN npm run build
