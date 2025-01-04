@@ -12,7 +12,7 @@ import {
     Typography,
     useMediaQuery
 } from "@mui/material";
-import {useSelector} from "store";
+import {useDispatch, useSelector} from "store";
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
@@ -24,15 +24,22 @@ import StateService from "services/StateService";
 import {DefaultSort} from "constants/constants";
 import TaskLabelService from "services/TaskLabelService";
 import {Autocomplete} from "@mui/lab";
+import ProjectService from "services/ProjectService";
+import TaskService from "services/TaskService";
+import {useEffect, useRef, useState} from "react";
+import DeleteConfirmDialog from "components/dialogs/DeleteConfirmDialog";
+import {ThemeActions} from "store/slices/ThemeSlice";
 
 const FormWrapper = styled(Box)(({ theme }) => ({
     padding: theme.spacing(10)
 }));
 
 export default function TaskForm(props) {
-    const { data, states, onSuccess, onClose } = props;
+    const { data, states, mutate, onClose } = props;
+    const dispatch = useDispatch();
     const { project, workspace } = useSelector(state => state.app);
     const mobile = useMediaQuery(theme => theme.breakpoints.down('sm'));
+    const [deleteConfirm, setDeleteConfirm] = useState(false);
 
     const { data: resLabels } = useSWR(
         project?.id ? '/api/task-label' : null,
@@ -44,31 +51,60 @@ export default function TaskForm(props) {
 
     const { data: resMembers } = useSWR(
         project?.id ? '/api/member' : null,
-        () => TaskLabelService.getTaskLabelsByQuery({
-            project: project?.id,
-            sort: DefaultSort.name.value
-        })
+        () => ProjectService.getProjectMember(project?.id)
     )
 
-    console.log(resLabels?.data)
     const formik = useFormik({
         initialValues: {
             title: data?.title ?? '',
             description: data?.description ?? '',
             stateId: data?.stateId ?? '',
-            startDate: moment(data?.startDate).get('year') !== 1 ? moment(data?.startDate) : null,
-            endDate: moment(data?.endDate).get('year') !== 1 ? moment(data?.endDate) : null,
+            startDate: data?.startDate && moment(data?.startDate).get('year') !== 1 ? moment(data?.startDate) : null,
+            endDate: data?.endDate && moment(data?.endDate).get('year') !== 1 ? moment(data?.endDate) : null,
+            labelIds: data?.labels ?? [],
+            assigneeIds: data?.assignees ?? [],
         },
         onSubmit: values => handleSubmit(values)
     });
 
+    const mounted = useRef(false);
+    useEffect(() => {
+        if (!mounted.current && data?.id) {
+            formik.setValues(data);
+            mounted.current = true;
+        }
+    }, [data]);
+
+    const handleSuccess = () => {
+        mutate();
+        dispatch(ThemeActions.setRightSidebarOpen(false));
+        dispatch(ThemeActions.setRightSidebarContent(null));
+    };
+
+    const submit = (params) => {
+        if (data?.id) {
+            return TaskService.updateTask(data?.id, params);
+        }
+
+        return TaskService.createTask(params);
+    }
+
     const handleSubmit = (values) => {
         const params = {
             ...values,
+            labelIds: values?.labelIds?.map(e => e.id),
+            assigneeIds: values?.assigneeIds?.map(e => e.id),
             projectId: project?.id,
             workspaceId: workspace?.id,
         };
-        console.log(params);
+
+        return submit(params)
+            .then(() => handleSuccess());
+    }
+
+    const handleDelete = () => {
+        return TaskService.deleteTask(data?.id)
+            .then(() => handleSuccess());
     }
 
     return (
@@ -143,13 +179,38 @@ export default function TaskForm(props) {
                             multiple
                             options={resLabels?.data}
                             getOptionLabel={(option) => option.label}
-                            defaultValue={formik.values?.labelId}
+                            value={formik.values?.labelIds}
+                            onChange={(e, val) =>
+                                formik.setFieldValue('labelIds', val)}
                             renderInput={(params) => (
                                 <TextField {...params} variant="outlined"/>
                             )}
                         />
                     </Box>
-                    <Stack alignItems="end">
+                    <Box>
+                        <FormLabel>Assignees</FormLabel>
+                        <Autocomplete
+                            multiple
+                            options={resMembers?.data}
+                            getOptionLabel={(option) => option.name}
+                            value={formik.values?.assigneeIds}
+                            onChange={(e, val) =>
+                                formik.setFieldValue('assigneeIds', val)}
+                            renderInput={(params) => (
+                                <TextField {...params} variant="outlined"/>
+                            )}
+                        />
+                    </Box>
+                    <Stack direction="row" justifyContent="end" spacing={3} sx={{ paddingTop: 4 }}>
+                        {data?.id && (
+                            <Button
+                                color="error"
+                                variant="contained"
+                                type="button"
+                                onClick={() => setDeleteConfirm(true)}>
+                                Delete Task
+                            </Button>
+                        )}
                         <Button
                             variant="contained"
                             type="submit">
@@ -158,6 +219,11 @@ export default function TaskForm(props) {
                     </Stack>
                 </Stack>
             </form>
+
+            <DeleteConfirmDialog
+                open={deleteConfirm}
+                onClose={() => setDeleteConfirm(false)}
+                onSubmit={handleDelete}/>
         </FormWrapper>
     )
 }

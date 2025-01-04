@@ -6,6 +6,9 @@ RUN go mod tidy
 
 COPY *.go ./
 
+RUN rm -f .env .env.* .env-*
+RUN rm -rf .git .gitignore
+
 RUN go build -o /kickof
 
 EXPOSE 8000

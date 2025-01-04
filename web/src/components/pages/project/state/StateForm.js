@@ -19,6 +19,7 @@ import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
 import {CloseRounded} from "@mui/icons-material";
 import QuillEditor from "components/forms/Editor/QuillEditor";
 import {StateType} from "constants/constants";
+import StateService from "services/StateService";
 
 const FormWrapper = styled(Box)(({ theme }) => ({
     padding: theme.spacing(10)
@@ -31,8 +32,8 @@ export default function StateForm(props) {
 
     const formik = useFormik({
         initialValues: {
-            name: '',
-            type: ''
+            name: data?.name ?? '',
+            type: data?.type ?? ''
         },
         onSubmit: values => handleSubmit(values)
     });
@@ -42,7 +43,14 @@ export default function StateForm(props) {
             ...values,
             projectId: project?.id,
             workspaceId: workspace?.id,
-        }
+        };
+
+        return StateService.createState(params)
+            .then(res => {
+                if (res) {
+                    onSuccess();
+                }
+            });
     }
 
     return (
@@ -85,7 +93,8 @@ export default function StateForm(props) {
                     </Box>
                     <Stack alignItems="end">
                         <Button
-                            variant="contained">
+                            variant="contained"
+                            type="submit">
                             Submit
                         </Button>
                     </Stack>

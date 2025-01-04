@@ -21,7 +21,7 @@ func main() {
 		log.Println("No .env file, will use system environment")
 	}
 
-	log.Println("Version: ", os.Getenv("VERSION"))
+	log.Println("Version: ", os.Getenv("MONGODB_URI"))
 
 	if !database.Init() {
 		log.Printf("Connected to MongoDB URI: Failure")
@@ -68,6 +68,12 @@ func main() {
 			protected.GET("/project/:id", controllers.GetProjectByIdOrCode)
 			protected.PATCH("/project/:id", controllers.UpdateProject)
 			protected.DELETE("/project/:id", controllers.DeleteProject)
+
+			protected.GET("/page", controllers.GetPages)
+			protected.POST("/page", controllers.CreatePage)
+			protected.GET("/page/:id", controllers.GetPageById)
+			protected.PATCH("/page/:id", controllers.UpdatePage)
+			protected.DELETE("/page/:id", controllers.DeletePage)
 
 			protected.GET("/role", controllers.GetRoles)
 			protected.POST("/role", controllers.CreateRole)

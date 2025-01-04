@@ -12,7 +12,7 @@ type TaskLabel struct {
 }
 
 type Task struct {
-	Id          string      `json:"id"`
+	Id          string      `json:"id" binding:"required"`
 	WorkspaceId string      `json:"workspaceId" bson:"workspaceId"`
 	ProjectId   string      `json:"projectId" bson:"projectId"`
 	StateId     string      `json:"stateId" bson:"stateId"`

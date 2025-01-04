@@ -12,13 +12,6 @@ const updateTask = (id, params) => {
     return Api.Instance.patch(`/task/${id}`, params);
 }
 
-const updateColumnTask = async (taskId, columnId) => {
-    const data = await Api.Instance.get(`/task/${taskId}`).then(res => res.data);
-    if (data.id) {
-        data.columnId = columnId;
-    }
-};
-
 const deleteTask = (id) => {
     return Api.Instance.delete(`/task/${id}`);
 }

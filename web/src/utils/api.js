@@ -4,8 +4,6 @@ import AppStorage from "utils/storage";
 const Instance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL
 });
-
-// console.log("Api Url", process.env.NEXT_PUBLIC_API_URL, process.env.API_URL)
 Instance.interceptors.request.use(
     async (config) => {
         const token = await AppStorage.GetItem('x-token');

@@ -10,36 +10,48 @@ import StateForm from "components/pages/project/state/StateForm";
 import StateService from "services/StateService";
 import useSWR from "swr";
 import {DefaultSort} from "constants/constants";
+import {useEffect, useState} from "react";
+import TaskService from "services/TaskService";
 
 
 
 export default function Task() {
     const dispatch = useDispatch();
-    const { workspace, project } = useSelector(state => state.app);
+    const { project } = useSelector(state => state.app);
+    const [states, setStates] = useState([]);
 
-    const { data: resState, isLoading: loadingColumn, mutate } = useSWR(
+    const { data: resState, mutate } = useSWR(
         project?.id ? '/api/state' : null,
         () => StateService.getStatesByQuery({
             project: project?.id,
             sort: DefaultSort.oldest.value
         })
-    )
+    );
 
-    const renderTaskForm = () => {
-        return <TaskForm onClose={() => {
-            dispatch(ThemeActions.setRightSidebarOpen(false));
-            dispatch(ThemeActions.setRightSidebarContent(null))
-        }}/>;
-    };
+    useEffect(() => {
+        if (states.length === 0) {
+            setStates(resState?.data ?? []);
+        }
+    }, [resState?.data]);
 
     const handleTask = () => {
         dispatch(ThemeActions.setRightSidebarOpen(true));
-        dispatch(ThemeActions.setRightSidebarContent(renderTaskForm()))
+        dispatch(ThemeActions.setRightSidebarContent(<TaskForm
+            states={states}
+            onClose={() => {
+                dispatch(ThemeActions.setRightSidebarOpen(false));
+                dispatch(ThemeActions.setRightSidebarContent(null))
+            }}
+            mutate={mutate}/>))
     };
 
     const handleState = () => {
         dispatch(ThemeActions.setRightSidebarOpen(true));
-        dispatch(ThemeActions.setRightSidebarContent(<StateForm/>));
+        dispatch(ThemeActions.setRightSidebarContent(<StateForm mutate={mutate}/>));
+    };
+
+    const handleUpdateTask = (task) => {
+        return TaskService.updateTask(task.id, task);
     };
 
     return (
@@ -68,7 +80,9 @@ export default function Task() {
                     </Stack>
                 </CardContent>
             </Card>
-            <TaskKanban states={resState?.data}/>
+            <TaskKanban
+                states={resState?.data}
+                onUpdate={handleUpdateTask}/>
         </>
     )
 }
