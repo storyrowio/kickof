@@ -12,13 +12,6 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# Set environment variables
-ENV NODE_ENV=development
-ENV PORT=3000
-ENV NEXT_PUBLIC_APP_URL=http://localhost:3001
-ENV NEXT_PUBLIC_API_URL=https://kickof-server.onrender.com/api
-ENV API_URL=https://kickof-server.onrender.com/api
-
 RUN echo "Build time environment development:"
 RUN printenv | grep NEXT_PUBLIC_API_URL
 
@@ -43,13 +36,6 @@ RUN npm install --production
 COPY . .
 RUN rm -f .env .env.* .env-*
 RUN rm -rf .git .gitignore
-
-# Set environment variables
-ENV NODE_ENV=production
-ENV PORT=3000
-ENV NEXT_PUBLIC_APP_URL=https://kickof-web.onrender.com
-ENV NEXT_PUBLIC_API_URL=https://kickof-server.onrender.com/api
-ENV API_URL=https://kickof-server.onrender.com/api
 
 RUN echo "Build time environment production:"
 RUN printenv | grep NEXT_PUBLIC_API_URL
