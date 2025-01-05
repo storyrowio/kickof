@@ -2,6 +2,7 @@ import {useDispatch, useSelector} from "store";
 import {Box, FormLabel, MenuItem, Select, Stack} from "@mui/material";
 import {AppActions} from "store/slices/AppSlice";
 import {useRouter} from "next/navigation";
+import ProjectService from "services/ProjectService";
 
 export default function WorkspaceSection() {
     const dispatch = useDispatch();
@@ -12,7 +13,12 @@ export default function WorkspaceSection() {
     const handleSelect = (id) => {
         const workspaceItem = workspaces.find(item => item.id === id);
         dispatch(AppActions.setWorkspace(workspaceItem));
-        router.push(`/app/${workspaceItem?.code}`)
+        router.push(`/app/${workspaceItem?.code}`);
+
+        return ProjectService.getProjectsByQuery({workspace: id})
+            .then((resProject) => {
+                dispatch(AppActions.setProjects(resProject?.data));
+            })
     };
 
     const handleSelectProject = (id) => {

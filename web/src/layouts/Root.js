@@ -38,7 +38,7 @@ const RootApp = ({ children }) => {
                         await WorkspaceService.getWorkspacesByQuery({userId: res?.id})
                             .then(async (resWorkspace) => {
                                 dispatch(AppActions.setWorkspaces(resWorkspace?.data));
-                                if (resWorkspace?.data?.length > 0) {
+                                if (!params.workspaceCode && resWorkspace?.data?.length > 0) {
                                     router.push(`/app/${resWorkspace.data[0]?.code}`);
                                 }
                             })
