@@ -53,14 +53,11 @@ export default function TaskForm(props) {
         project?.id ? '/api/member' : null,
         () => ProjectService.getProjectMember(project?.id)
     )
-
     const formik = useFormik({
         initialValues: {
             title: data?.title ?? '',
             description: data?.description ?? '',
             stateId: data?.stateId ?? '',
-            startDate: data?.startDate && moment(data?.startDate).get('year') !== 1 ? moment(data?.startDate) : null,
-            endDate: data?.endDate && moment(data?.endDate).get('year') !== 1 ? moment(data?.endDate) : null,
             labelIds: data?.labels ?? [],
             assigneeIds: data?.assignees ?? [],
         },
@@ -70,15 +67,20 @@ export default function TaskForm(props) {
     const mounted = useRef(false);
     useEffect(() => {
         if (!mounted.current && data?.id) {
+            data.startDate = (data?.startDate && moment(data?.startDate).get('year') !== 1) ? moment(data?.startDate) : null;
+            data.endDate = (data?.endDate && moment(data?.endDate).get('year') !== 1) ? moment(data?.endDate) : null;
+            data.labelIds = data.labels;
+            data.assigneeIds = data.assignees;
+
             formik.setValues(data);
             mounted.current = true;
         }
     }, [data]);
 
     const handleSuccess = () => {
-        mutate();
         dispatch(ThemeActions.setRightSidebarOpen(false));
         dispatch(ThemeActions.setRightSidebarContent(null));
+        mutate();
     };
 
     const submit = (params) => {

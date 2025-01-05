@@ -22,17 +22,26 @@ import EnhancedTableToolbar from "components/table/EnhancedTableToolbar";
 import CustomCheckbox from "components/forms/CustomCheckbox";
 import CustomChip from "components/chip/CustomChip";
 import Roles from "constants/role";
+import {usePathname} from "next/navigation";
+import Link from "next/link";
+import useSWR from "swr";
+import StateService from "services/StateService";
+import PageService from "services/PageService";
 
 export default function ProjectPage() {
+    const pathname = usePathname();
     const { project, workspace } = useSelector(state => state.app);
     const [selectedItems, setSelectedItems] = useState([]);
     const [filter, setFilter] = useState({ sort: DefaultSort.name.value });
     const [deleteConfirm, setDeleteConfirm] = useState(false);
-    const loading = false;
 
-    const users = [
-        {name: 'John Doe', email: 'johndoe@example.com', role: {name: 'Admin', code: 'admin'}}
-    ];
+    const { data: resPage, isLoading: loading, mutate } = useSWR(
+        project?.id ? '/api/page' : null,
+        () => PageService.getPagesByQuery({
+            project: project?.id,
+            sort: DefaultSort.oldest.value
+        })
+    );
 
     const handleSelectItems = (id) => {
         if (selectedItems.includes(id)) {
@@ -69,16 +78,13 @@ export default function ProjectPage() {
                                 <Table sx={{ whiteSpace: 'nowrap' }}>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell/>
-                                            <TableCell>Name</TableCell>
-                                            <TableCell>Email</TableCell>
-                                            <TableCell>Last Active</TableCell>
-                                            <TableCell>Role</TableCell>
+                                            <TableCell width={50}/>
+                                            <TableCell>Title</TableCell>
                                             <TableCell align="right">Option</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {users.length > 0 ? users?.map((row, i) => (
+                                        {resPage?.data?.length > 0 ? resPage?.data?.map((row, i) => (
                                             <TableRow key={i}>
                                                 <TableCell padding="checkbox">
                                                     <CustomCheckbox
@@ -86,20 +92,7 @@ export default function ProjectPage() {
                                                         checked={selectedItems.includes(row.id)}
                                                         onChange={() => handleSelectItems(row.id)}/>
                                                 </TableCell>
-                                                <TableCell>{row.name}</TableCell>
-                                                <TableCell>{row.email}</TableCell>
-                                                {/*<TableCell>{row.lastActive ?*/}
-                                                {/*    moment(row.lastActive).format('ddd, DD MMM YYYY hh:mm') : '-'}*/}
-                                                {/*</TableCell>*/}
-                                                <TableCell>
-                                                    <CustomChip
-                                                        rounded
-                                                        size='small'
-                                                        skin='light'
-                                                        label={row.role?.name}
-                                                        color={row.role?.code === Roles.admin.value ? 'primary' : 'secondary'}
-                                                    />
-                                                </TableCell>
+                                                <TableCell>{row.title}</TableCell>
                                                 <TableCell align="right">
                                                     <Tooltip title="Preview">
                                                         <IconButton>
@@ -120,8 +113,8 @@ export default function ProjectPage() {
                             <Stack direction="row" paddingTop={3} justifyContent="end">
                                 <Pagination
                                     color="primary"
-                                    count={5}
-                                    page={1}
+                                    count={resPage?.pagination?.count}
+                                    page={resPage?.pagination?.page}
                                     // count={resData?.pagination?.pages ?? 1}
                                     // page={resData?.pagination?.currentPage}
                                     size="small" />
@@ -131,16 +124,16 @@ export default function ProjectPage() {
                 </CardContent>
             </Card>
 
-            <Tooltip title="Add Data">
-                <Fab
-                    color="primary"
-                    aria-label="add"
-                    sx={{ position: "fixed", right: "25px", bottom: "15px" }}
-                    // onClick={() => setOpenForm({open: true, data: null})}
-                >
-                    <AddRounded />
-                </Fab>
-            </Tooltip>
+            <Link href={`${pathname}/create`}>
+                <Tooltip title="Add Data">
+                    <Fab
+                        color="primary"
+                        aria-label="add"
+                        sx={{ position: "fixed", right: "25px", bottom: "15px" }}>
+                        <AddRounded />
+                    </Fab>
+                </Tooltip>
+            </Link>
 
             <DeleteConfirmDialog
                 open={deleteConfirm}

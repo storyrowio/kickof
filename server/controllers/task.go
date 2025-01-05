@@ -56,6 +56,8 @@ func GetTasks(c *gin.Context) {
 func CreateTask(c *gin.Context) {
 	var request models.Task
 
+	request.Id = uuid.New().String()
+
 	err := c.ShouldBindJSON(&request)
 	if err != nil {
 		c.JSON(400, models.Response{Data: err.Error()})

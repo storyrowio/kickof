@@ -43,6 +43,7 @@ func CreatePage(c *gin.Context) {
 	}
 
 	request.Id = uuid.New().String()
+	request.DefaultEndpoint = request.ProjectId + "/page" + request.Id
 	request.CreatedBy = profile.Id
 	request.CreatedAt = time.Now()
 	request.UpdatedAt = time.Now()

@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "store";
 export default function RightSidebar() {
     const dispatch = useDispatch();
     const { rightSideBarOpen, rightSideBarContent } = useSelector(state => state.theme);
-
+    console.log('Right bar open', rightSideBarOpen)
     return (
         <Drawer
             open={rightSideBarOpen}

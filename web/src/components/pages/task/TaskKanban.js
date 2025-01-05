@@ -16,7 +16,7 @@ const KanbanWrapper = styled(Box)(({ theme }) => ({
     gap: 20,
 }));
 
-export default function TaskKanban({ states, onUpdate }) {
+export default function TaskKanban({ states, mutate, onUpdate }) {
     const dispatch = useDispatch();
 
     const handleEditTask = (data) => {
@@ -25,6 +25,7 @@ export default function TaskKanban({ states, onUpdate }) {
             <TaskForm
                 data={data}
                 states={states}
+                mutate={mutate}
                 onClose={() => {
                 dispatch(ThemeActions.setRightSidebarOpen(false));
                 dispatch(ThemeActions.setRightSidebarContent(null))
@@ -67,27 +68,27 @@ export default function TaskKanban({ states, onUpdate }) {
                             <Box sx={{ maxHeight: 'calc(100vh - 220px)', overflowY: 'auto' }}>
                                 <Droppable droppableId={state.id}>
                                     {(provided) => (
-                                        <Stack
-                                            spacing={3}
+                                        <div
                                             {...provided.droppableProps}
-                                            ref={provided.innerRef}
-                                            sx={{ minHeight: 100 }}>
-                                            {state.tasks?.map((task, j) => (
-                                                <Draggable key={task.id} draggableId={task.id} index={j}>
-                                                    {(provided) => (
-                                                        <Box
-                                                            onClick={() => handleEditTask(task)}
-                                                            sx={{ maxWidth: '100%' }}
-                                                            ref={provided.innerRef}
-                                                            {...provided.draggableProps}
-                                                            {...provided.dragHandleProps}>
-                                                            <TaskCard task={task}/>
-                                                        </Box>
-                                                    )}
-                                                </Draggable>
-                                            ))}
+                                            ref={provided.innerRef}>
+                                            <Stack spacing={3} sx={{ minHeight: 100 }}>
+                                                {state.tasks?.map((task, j) => (
+                                                    <Draggable key={task.id} draggableId={task.id} index={j}>
+                                                        {(provided) => (
+                                                            <Box
+                                                                onClick={() => handleEditTask(task)}
+                                                                sx={{ maxWidth: '100%' }}
+                                                                ref={provided.innerRef}
+                                                                {...provided.draggableProps}
+                                                                {...provided.dragHandleProps}>
+                                                                <TaskCard task={task}/>
+                                                            </Box>
+                                                        )}
+                                                    </Draggable>
+                                                ))}
+                                            </Stack>
                                             {provided.placeholder}
-                                        </Stack>
+                                        </div>
                                     )}
                                 </Droppable>
                             </Box>
