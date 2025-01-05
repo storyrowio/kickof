@@ -1,4 +1,15 @@
-import {Box, CircularProgress, Divider, Drawer, IconButton, List, Stack, styled, useMediaQuery} from "@mui/material";
+import {
+    Box,
+    CircularProgress,
+    Divider,
+    Drawer,
+    IconButton,
+    List,
+    Stack,
+    styled,
+    Typography,
+    useMediaQuery
+} from "@mui/material";
 import {useDispatch, useSelector} from "store";
 import {ThemeActions} from "store/slices/ThemeSlice";
 import Link from "next/link";
@@ -20,8 +31,18 @@ const MenuHeaderWrapper = styled(Box)(({ theme, width }) => ({
     paddingRight: theme.spacing(3.5),
     paddingLeft: theme.spacing(3.5),
     transition: 'padding .25s ease-in-out',
-    minHeight: theme.mixins.toolbar.minHeight
+    minHeight: theme.mixins.toolbar.minHeight,
+    position: 'relative'
 }))
+
+const FooterWrapper = styled(Box)(() => ({
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    padding: '1rem',
+    position: 'absolute',
+    bottom: 0
+}));
 
 export default function AppSidebar() {
     const dispatch = useDispatch();
@@ -85,6 +106,9 @@ export default function AppSidebar() {
                     {!params?.projectId && <ProjectList/>}
                 </>
             )}
+            <FooterWrapper>
+                <Typography variant="caption">KickOf v{process.env.VERSION ?? 'No Version Found'}</Typography>
+            </FooterWrapper>
         </Drawer>
     )
 }

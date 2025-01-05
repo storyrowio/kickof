@@ -1,6 +1,6 @@
 'use client'
 
-import {useParams, usePathname} from "next/navigation";
+import {useParams, usePathname, useRouter} from "next/navigation";
 import {useDispatch, useSelector} from "store";
 import Theme from "theme";
 import {SessionProvider} from "next-auth/react";
@@ -18,6 +18,7 @@ const RootApp = ({ children }) => {
     const pathname = usePathname();
     const params = useParams();
     const dispatch = useDispatch();
+    const router = useRouter();
     const themeSetting = useSelector(state => state.theme);
 
     const fetchWorkspace = async () => {
@@ -33,10 +34,15 @@ const RootApp = ({ children }) => {
         setTimeout(async () => {
             await AuthService.GetProfile()
                 .then(async (res) => {
-                    await WorkspaceService.getWorkspacesByQuery({userId: res?.id})
-                        .then(async (resWorkspace) => {
-                            dispatch(AppActions.setWorkspaces(resWorkspace?.data));
-                        })
+                    if (res?.id) {
+                        await WorkspaceService.getWorkspacesByQuery({userId: res?.id})
+                            .then(async (resWorkspace) => {
+                                dispatch(AppActions.setWorkspaces(resWorkspace?.data));
+                                if (resWorkspace?.data?.length > 0) {
+                                    router.push(`/app/${resWorkspace.data[0]?.code}`);
+                                }
+                            })
+                    }
                 })
         }, 3000);
     };
