@@ -6,8 +6,9 @@ type Page struct {
 	ProjectId       string    `json:"projectId" bson:"projectId"`
 	Title           string    `json:"title"`
 	Content         string    `json:"content"`
-	IsPublic        bool      `json:"isPublic"`
-	DefaultEndpoint string    `json:"defaultEndpoint"`
+	IsPublic        bool      `json:"isPublic" bson:"isPublic"`
+	Slug            string    `json:"slug"`
+	DefaultEndpoint string    `json:"defaultEndpoint" bson:"defaultEndpoint"`
 	CreatedBy       string    `json:"createdBy" bson:"createdBy"`
 	Workspace       Workspace `json:"workspace" bson:"-"`
 	CreatedByUser   User      `json:"createdByUser" bson:"-"`

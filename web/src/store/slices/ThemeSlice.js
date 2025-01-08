@@ -10,7 +10,8 @@ const initialState = {
     sidebarCircleIconSize: '0.35rem',
     groupActive: [],
     rightSideBarOpen: false,
-    rightSideBarContent: null
+    rightSideBarContent: null,
+    showOnboardingDialog: false,
 };
 
 export const ThemeSlice = createSlice({
@@ -31,6 +32,9 @@ export const ThemeSlice = createSlice({
         },
         setRightSidebarContent: (state, action) => {
             state.rightSideBarContent = action.payload;
+        },
+        setShwoOnboardingDialog: (state, action) => {
+            state.showOnboardingDialog = action.payload;
         }
     }
 });

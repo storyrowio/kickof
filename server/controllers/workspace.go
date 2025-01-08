@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"kickof/lib"
 	"kickof/models"
 	"kickof/services"
 	"net/http"
@@ -36,8 +37,9 @@ func GetWorkspaces(c *gin.Context) {
 }
 
 func CreateWorkspace(c *gin.Context) {
-	var request models.Workspace
+	profile := services.GetCurrentUser(c.Request)
 
+	var request models.Workspace
 	err := c.ShouldBindJSON(&request)
 	if err != nil {
 		c.JSON(400, models.Response{Data: err.Error()})
@@ -45,8 +47,13 @@ func CreateWorkspace(c *gin.Context) {
 	}
 
 	request.Id = uuid.New().String()
+	request.UserIds = []string{profile.Id}
 	request.CreatedAt = time.Now()
 	request.UpdatedAt = time.Now()
+
+	if request.Code == "" {
+		request.Code = lib.CodeGenerator(request.Name)
+	}
 
 	_, err = services.CreateWorkspace(request)
 	if err != nil {

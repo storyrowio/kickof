@@ -1,14 +1,4 @@
 {
-  "users": [
-    {
-      "id": "86d03ea7-a43a-48d7-b392-71881dd91481",
-      "name": "Admin",
-      "email": "admin@sellinch.io",
-      "password": "admin",
-      "active": true,
-      "isAdmin": true
-    }
-  ],
   "permissions": [
     {"id": "user:create", "name": "User Create"},
     {"id": "user:read", "name": "User Read"},
@@ -37,6 +27,12 @@
     {"id": "task:delete", "name": "Task Delete"}
   ],
   "roles": [
+    {
+      "id": "f3f84da7-1a8d-4c6e-9fb8-d369f160421c",
+      "name": "System Admin",
+      "code": "systemadmin",
+      "permissions": ["all"]
+    },
     {
       "id": "795d1bc5-591b-4c08-a716-591c9ad75c83",
       "name": "Admin",
@@ -76,14 +72,26 @@
       ]
     }
   ],
+  "users": [
+    {
+      "id": "86d03ea7-a43a-48d7-b392-71881dd91481",
+      "name": "System Admin",
+      "email": "admin@kickof.com",
+      "password": "admin",
+      "active": true,
+      "status": true,
+      "isAdmin": true,
+      "roleId": "f3f84da7-1a8d-4c6e-9fb8-d369f160421c"
+    }
+  ],
   "settings": [
     {
       "id": "b0714389-8d36-44a9-9486-3389f6882f8a",
       "code": "profile",
       "name": "Company Profile",
       "setting": {
-        "name": "Express Skeleton",
-        "email": "cs@skeleton.com"
+        "name": "KickOf",
+        "email": "cs@kickof.com"
       },
       "type": "general",
       "status": true,
@@ -110,6 +118,21 @@
         "stripeSecretKey": ""
       },
       "type": "payment",
+      "status": true,
+      "isDefault": true
+    },
+    {
+      "id": "0de44589-1e3d-4fc6-905f-8c8a891f4a7c",
+      "code": "mail",
+      "name": "SMTP Mail",
+      "setting": {
+        "MAIL_MAILER": "smtp",
+        "MAIL_HOST": "smtp.gmail.com",
+        "MAIL_PORT": "587",
+        "MAIL_USERNAME": "storyrowio@gmail.com",
+        "MAIL_APP_PASSWORD": "wcsa oeuz eayd xyhw"
+      },
+      "type": "mail",
       "status": true,
       "isDefault": true
     }

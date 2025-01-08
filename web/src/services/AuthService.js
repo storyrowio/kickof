@@ -15,6 +15,7 @@ const Login = (params) => {
 const Register = (params) => {
     return Api.Instance.post('/register', params)
         .then(res => {
+            console.log('Result ', res.data)
             AppStorage.SetItem('x-token', res.data?.data?.token);
             return res
         });

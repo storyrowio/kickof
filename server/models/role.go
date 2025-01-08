@@ -1,8 +1,10 @@
 package models
 
 const (
-	AdminRole = "admin"
-	UserRole  = "user"
+	SystemAdminRole = "systemadmin"
+	AdminRole       = "admin"
+	ManagerRole     = "manager"
+	MemberRole      = "member"
 )
 
 type Role struct {
@@ -10,6 +12,7 @@ type Role struct {
 	Name        string   `json:"name"`
 	Code        string   `json:"code"`
 	Permissions []string `json:"permissions"` // permission ids
+	RoleType    string   `json:"roleType"`
 	BasicDate   `bson:",inline"`
 }
 

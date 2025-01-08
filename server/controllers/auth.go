@@ -36,12 +36,12 @@ func SignUp(c *gin.Context) {
 			return
 		}
 		roleId := ""
-		role := services.GetRole(bson.M{"code": models.UserRole}, nil)
+		role := services.GetRole(bson.M{"code": models.AdminRole}, nil)
 		if role != nil {
 			roleId = role.Id
 		}
 
-		user := models.User{
+		user = &models.User{
 			Id:         uuid.New().String(),
 			Active:     false,
 			Email:      request.Email,
@@ -56,7 +56,7 @@ func SignUp(c *gin.Context) {
 			},
 		}
 
-		_, err = services.CreateUser(user)
+		_, err = services.CreateUser(*user)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, models.Response{Data: err.Error()})
 			return
@@ -92,7 +92,7 @@ func SignIn(c *gin.Context) {
 	if user == nil {
 		if request.IsSocial {
 			roleId := ""
-			role := services.GetRole(bson.M{"code": models.UserRole}, nil)
+			role := services.GetRole(bson.M{"code": models.AdminRole}, nil)
 			if role != nil {
 				roleId = role.Id
 			}

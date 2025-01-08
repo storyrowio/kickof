@@ -1,10 +1,28 @@
 'use client'
 
 import {useState} from "react";
-import {Card, CardContent, CardHeader, Grid2, Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    Dialog, DialogContent, DialogTitle,
+    Grid2,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow
+} from "@mui/material";
 import DashboardWidget from "components/pages/dashboard/DashboardWidget";
+import {useSelector} from "store";
+import OnboardingForm from "components/pages/onboarding/OnboardingForm";
 
 export default function Dashboard() {
+    const { profile } = useSelector(state => state.profile);
+    const { workspaces } = useSelector(state => state.app);
+    const { showOnboardingDialog } = useSelector(state => state.theme);
+
+    console.log(workspaces)
     const [widgets, setWidgets] = useState([
         { title: 'Projects', content: '1230', color: 'primary', icon: '/images/icons/dashboard-widget-1.svg' },
         { title: 'Members', content: '1230', color: 'secondary', icon: '/images/icons/dashboard-widget-2.svg' },
@@ -56,6 +74,16 @@ export default function Dashboard() {
                     </Card>
                 </Grid2>
             </Grid2>
+
+            <Dialog
+                fullWidth
+                maxWidth="sm"
+                open={showOnboardingDialog}>
+                <DialogTitle>Create Workspace</DialogTitle>
+                <DialogContent>
+                    <OnboardingForm/>
+                </DialogContent>
+            </Dialog>
         </>
     )
 }

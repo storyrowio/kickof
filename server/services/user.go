@@ -8,6 +8,7 @@ import (
 	"kickof/database"
 	"kickof/models"
 	"net/http"
+	"time"
 )
 
 const UserCollection = "users"
@@ -156,6 +157,8 @@ func GetUserSocials(userId string) []models.UserSocial {
 func CreateManyUser(params []models.User) (bool, error) {
 	data := make([]interface{}, 0)
 	for _, val := range params {
+		val.CreatedAt = time.Now()
+		val.UpdatedAt = time.Now()
 		data = append(data, val)
 	}
 

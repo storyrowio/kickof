@@ -22,6 +22,7 @@ import Roles from "constants/role";
 import Link from "next/link";
 import {Google, VisibilityOffRounded, VisibilityRounded} from "@mui/icons-material";
 import Image from "next/image";
+import AuthService from "services/AuthService";
 
 export default function RegisterForm() {
     const theme = useTheme();
@@ -38,17 +39,17 @@ export default function RegisterForm() {
     });
 
     const handleSubmit = async (values) => {
-        setLoading(true);
-        // return AuthService.Login(values)
-        //     .then(res => {
-        //         setLoading(false);
-        //         if (res.status === 200) {
-        //             return router.push('/app');
-        //         }
-        //     }).catch(err => {
-        //         console.log(err.response)
-        //         setError(err.response?.data?.message ?? 'Something wrong!');
-        //     })
+        // setLoading(true);
+        return AuthService.Register(values)
+            .then(res => {
+                setLoading(false);
+                if (res.status === 200) {
+                    return router.push('/app');
+                }
+            }).catch(err => {
+                console.log(err.response)
+                setError(err.response?.data?.message ?? 'Something wrong!');
+            })
     };
 
     const handleSocialLogin = async (social) => {

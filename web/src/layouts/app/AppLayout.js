@@ -1,5 +1,5 @@
 import AppNavbar from "layouts/app/components/navbar/AppNavbar";
-import {Box, CircularProgress, Stack, styled} from "@mui/material";
+import {Box, CircularProgress, Stack, styled, useMediaQuery} from "@mui/material";
 import AppSidebar from "layouts/app/components/sidebar/AppSidebar";
 import {useDispatch, useSelector} from "store";
 import {useEffect, useRef, useState} from "react";
@@ -8,6 +8,7 @@ import {useParams, usePathname, useRouter, useSearchParams} from "next/navigatio
 import RightSidebar from "layouts/app/components/sidebar/RightSidebar";
 import AppStorage from "utils/storage";
 import ProjectService from "services/ProjectService";
+import {ThemeActions} from "store/slices/ThemeSlice";
 
 const LayoutWrapper = styled(Box)(({ theme }) => ({
     height: '100%',
@@ -52,13 +53,23 @@ export default function AppLayout({ children }) {
     const searchParams = useSearchParams();
     const token = searchParams.get('token');
     const router = useRouter();
+    const mobile = useMediaQuery(theme => theme.breakpoints.down('sm'));
     const { isSidebarCollapsed } = useSelector(state => state.theme);
     const { workspaces, workspace, projects, project } = useSelector(state => state.app);
     const [loading, setLoading] = useState(true);
 
     const mounted = useRef(false);
+    useEffect(() => {
+        if (!mounted.current) {
+            if (mobile) {
+                dispatch(ThemeActions.setSidebarCollapse(true));
+                mounted.current = true;
+            }
+        }
+    }, [mobile]);
 
     const redirectToWorkspace = () => {
+        console.log(workspaces)
         router.push(`/app/${workspaces[0].code}`);
         setLoading(false);
 

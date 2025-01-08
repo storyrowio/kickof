@@ -11,7 +11,11 @@ import (
 
 func SendEmail(to string, subject string, data interface{}, templateFile string) error {
 
-	from := "no-reply@lapis.id"
+	from := "no-reply@storyrow.id"
+
+	if os.Getenv("APP_DOMAIN") != "" {
+		from = "no-reply@" + os.Getenv("APP_DOMAIN")
+	}
 
 	result, _ := ParseTemplate(templateFile, data)
 

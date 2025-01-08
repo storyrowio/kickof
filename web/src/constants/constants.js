@@ -20,3 +20,5 @@ export const StateType = {
     completed: { name: 'Completed', value: 'completed' },
     cancelled: { name: 'Cancelled', value: 'cancelled' },
 }
+
+export const WorkspaceSizes = ['1', '2-20', '21-200', '200+'];

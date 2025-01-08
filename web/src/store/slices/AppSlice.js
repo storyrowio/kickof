@@ -4,29 +4,8 @@ import {SettingTypes} from "constants/constants";
 const initialState = {
     country: {},
     setting: {},
-    workspaces: [
-        {
-            "id": "8236b5c1-e990-49b5-ba62-2059eab8b96b",
-            "name": "Storyrow",
-            "code": "storyrow",
-            "endpoint": "storyrow",
-            "size": "2-20"
-        },
-        {
-            "id": "8236b5c1-e990-49b5-ba62-2059eab8b44v",
-            "name": "Open Source",
-            "code": "opensource",
-            "endpoint": "opensource",
-            "size": "2-20"
-        }
-    ],
-    workspace: {
-        // "id": "8236b5c1-e990-49b5-ba62-2059eab8b96b",
-        // "name": "Storyrow",
-        // "code": "storyrow",
-        // "endpoint": "storyrow",
-        // "size": "2-20"
-    },
+    workspaces: [],
+    workspace: {},
     projects: [],
     project: {}
 };

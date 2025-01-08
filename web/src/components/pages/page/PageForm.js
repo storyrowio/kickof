@@ -5,6 +5,8 @@ import PageService from "services/PageService";
 import {Box, Button, Card, CardContent, FormLabel, Stack, TextField} from "@mui/material";
 import QuillEditor from "components/forms/Editor/QuillEditor";
 import {useRouter} from "next/navigation";
+import {useEffect, useRef} from "react";
+import moment from "moment/moment";
 
 export default function PageForm({ data }) {
     const router = useRouter();
@@ -17,6 +19,14 @@ export default function PageForm({ data }) {
         },
         onSubmit: values => handleSubmit(values)
     });
+
+    const mounted = useRef(false);
+    useEffect(() => {
+        if (!mounted.current && data?.id) {
+            formik.setValues(data);
+            mounted.current = true;
+        }
+    }, [data]);
 
     const submit = (params) => {
         if (data?.id) {

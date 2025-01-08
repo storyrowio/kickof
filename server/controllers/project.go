@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"kickof/lib"
 	"kickof/models"
 	"kickof/services"
 	"net/http"
@@ -54,6 +55,10 @@ func CreateProject(c *gin.Context) {
 	request.UserIds = []string{profile.Id}
 	request.CreatedAt = time.Now()
 	request.UpdatedAt = time.Now()
+
+	if request.Code == "" {
+		request.Code = lib.CodeGenerator(request.Name)
+	}
 
 	_, err = services.CreateProject(request)
 	if err != nil {

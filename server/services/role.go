@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"kickof/database"
 	"kickof/models"
+	"time"
 )
 
 const RoleCollection = "roles"
@@ -90,6 +91,8 @@ func DeleteRole(id string) (*mongo.DeleteResult, error) {
 func CreateManyRole(params []models.Role) (bool, error) {
 	data := make([]interface{}, 0)
 	for _, val := range params {
+		val.CreatedAt = time.Now()
+		val.UpdatedAt = time.Now()
 		data = append(data, val)
 	}
 

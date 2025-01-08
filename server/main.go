@@ -58,6 +58,8 @@ func main() {
 		api.GET("/refresh-token", controllers.RefreshToken)
 		api.POST("/activate", controllers.Activate)
 
+		api.GET("/page/:id", controllers.GetPageById)
+
 		protected := api.Group("/", config.AuthMiddleware())
 		{
 			protected.GET("/profile", controllers.GetProfile)
@@ -71,7 +73,6 @@ func main() {
 
 			protected.GET("/page", controllers.GetPages)
 			protected.POST("/page", controllers.CreatePage)
-			protected.GET("/page/:id", controllers.GetPageById)
 			protected.PATCH("/page/:id", controllers.UpdatePage)
 			protected.DELETE("/page/:id", controllers.DeletePage)
 

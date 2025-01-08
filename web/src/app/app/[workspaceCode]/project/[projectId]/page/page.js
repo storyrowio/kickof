@@ -16,20 +16,23 @@ import {
     Tooltip
 } from "@mui/material";
 import {Pagination} from "@mui/lab";
-import {AddRounded, EditRounded} from "@mui/icons-material";
+import {AddRounded, EditRounded, OpenInNewRounded} from "@mui/icons-material";
 import DeleteConfirmDialog from "components/dialogs/DeleteConfirmDialog";
 import EnhancedTableToolbar from "components/table/EnhancedTableToolbar";
 import CustomCheckbox from "components/forms/CustomCheckbox";
 import CustomChip from "components/chip/CustomChip";
 import Roles from "constants/role";
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import Link from "next/link";
 import useSWR from "swr";
 import StateService from "services/StateService";
 import PageService from "services/PageService";
+import {router} from "next/client";
+import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 
 export default function ProjectPage() {
     const pathname = usePathname();
+    const router = useRouter();
     const { project, workspace } = useSelector(state => state.app);
     const [selectedItems, setSelectedItems] = useState([]);
     const [filter, setFilter] = useState({ sort: DefaultSort.name.value });
@@ -68,7 +71,7 @@ export default function ProjectPage() {
                         handleChange={(newFilter) => setFilter({...filter, ...newFilter})}
                         sortItems={DefaultSort}
                         onDelete={() => setDeleteConfirm(true)}/>
-                    {loading || false ? (
+                    {loading ? (
                         <Stack alignItems="center">
                             <CircularProgress size={36}/>
                         </Stack>
@@ -94,8 +97,13 @@ export default function ProjectPage() {
                                                 </TableCell>
                                                 <TableCell>{row.title}</TableCell>
                                                 <TableCell align="right">
-                                                    <Tooltip title="Preview">
-                                                        <IconButton>
+                                                    <Tooltip title="View">
+                                                        <IconButton onClick={() => router.push(`/page/${row.slug}`)}>
+                                                            <OpenInNewRounded fontSize="small" sx={{ color: 'text.secondary'}}/>
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                    <Tooltip title="Edit">
+                                                        <IconButton onClick={() => router.push(`${pathname}/${row.id}/update`)}>
                                                             <EditRounded fontSize="small" sx={{ color: 'text.secondary'}}/>
                                                         </IconButton>
                                                     </Tooltip>

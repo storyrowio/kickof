@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"kickof/lib"
 	"kickof/models"
 	"kickof/services"
 	"net/http"
@@ -43,7 +44,8 @@ func CreatePage(c *gin.Context) {
 	}
 
 	request.Id = uuid.New().String()
-	request.DefaultEndpoint = request.ProjectId + "/page" + request.Id
+	request.Slug = lib.SlugGenerator(request.Title)
+	request.DefaultEndpoint = request.Slug + "/page/" + request.Id
 	request.CreatedBy = profile.Id
 	request.CreatedAt = time.Now()
 	request.UpdatedAt = time.Now()
@@ -63,8 +65,11 @@ func GetPageById(c *gin.Context) {
 
 	result := services.GetPage(bson.M{"id": id}, nil)
 	if result == nil {
-		c.JSON(http.StatusNotFound, models.Result{Data: "Data Not Found"})
-		return
+		result = services.GetPage(bson.M{"slug": id}, nil)
+		if result == nil {
+			c.JSON(http.StatusNotFound, models.Result{Data: "Data Not Found"})
+			return
+		}
 	}
 
 	c.JSON(http.StatusOK, models.Response{Data: result})
