@@ -72,7 +72,7 @@ a {
   border-radius: 10px 10px 0 0;
 }
 .quill > .ql-container {
-  min-height: 250px;
+  min-height: 400px;
   font-size: inherit;
   border-radius: 0 0 10px 10px;
   border-color: #BFBFBF;

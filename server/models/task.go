@@ -18,8 +18,8 @@ type Task struct {
 	StateId     string      `json:"stateId" bson:"stateId"`
 	Title       string      `json:"title"`
 	Code        string      `json:"description"`
-	StartDate   time.Time   `json:"startDate" bson:"startDate"`
-	EndDate     time.Time   `json:"endDate" bson:"endDate"`
+	StartDate   *time.Time  `json:"startDate" bson:"startDate"`
+	EndDate     *time.Time  `json:"endDate" bson:"endDate"`
 	LabelIds    []string    `json:"labelIds" bson:"labelIds"` // Task Label ids
 	Labels      []TaskLabel `json:"labels" bson:"-"`
 	AssigneeIds []string    `json:"assigneeIds"`

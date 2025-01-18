@@ -1,5 +1,5 @@
 import AppNavbar from "layouts/app/components/navbar/AppNavbar";
-import {Box, CircularProgress, Stack, styled, useMediaQuery} from "@mui/material";
+import {Box, Stack, styled, useMediaQuery} from "@mui/material";
 import AppSidebar from "layouts/app/components/sidebar/AppSidebar";
 import {useDispatch, useSelector} from "store";
 import {useEffect, useRef, useState} from "react";
@@ -9,6 +9,8 @@ import RightSidebar from "layouts/app/components/sidebar/RightSidebar";
 import AppStorage from "utils/storage";
 import ProjectService from "services/ProjectService";
 import {ThemeActions} from "store/slices/ThemeSlice";
+import {AUTH_TOKEN} from "constants/storage";
+import Image from "next/image";
 
 const LayoutWrapper = styled(Box)(({ theme }) => ({
     height: '100%',
@@ -54,24 +56,23 @@ export default function AppLayout({ children }) {
     const token = searchParams.get('token');
     const router = useRouter();
     const mobile = useMediaQuery(theme => theme.breakpoints.down('sm'));
-    const { isSidebarCollapsed } = useSelector(state => state.theme);
-    const { workspaces, workspace, projects, project } = useSelector(state => state.app);
-    const [loading, setLoading] = useState(true);
+    const { isSidebarCollapsed, showOnboardingDialog } = useSelector(state => state.theme);
+    const { loaded, workspaces, workspace, projects, project } = useSelector(state => state.app);
 
     const mounted = useRef(false);
     useEffect(() => {
         if (!mounted.current) {
             if (mobile) {
                 dispatch(ThemeActions.setSidebarCollapse(true));
-                mounted.current = true;
+                // mounted.current = true;
             }
         }
     }, [mobile]);
 
     const redirectToWorkspace = () => {
-        console.log(workspaces)
-        router.push(`/app/${workspaces[0].code}`);
-        setLoading(false);
+        if (workspaces.length > 0) {
+            router.push(`/app/${workspaces[0].code}`);
+        }
 
         mounted.current = true;
     };
@@ -107,20 +108,16 @@ export default function AppLayout({ children }) {
 
     useEffect(() => {
         if (token && pathname.includes('/app')) {
-            AppStorage.SetItem('x-token', token);
+            AppStorage.SetItem(AUTH_TOKEN, token);
 
             redirectToWorkspace();
         }
     }, [token]);
 
-    useEffect(() => {
-        setLoading(false);
-    }, [params?.workspaceCode]);
-
-    if (loading) {
+    if (loaded.length < 2) {
         return (
-            <Stack justifyContent="center" alignItems="center" sx={{ width: '100%', height: '100vh' }}>
-                <CircularProgress/>
+            <Stack sx={{ minHeight: '100vh', minWidth: '100vw' }} justifyContent="center" alignItems="center">
+                <Image src={'/images/loader.svg'} alt="loader" width={100} height={100}/>
             </Stack>
         )
     }

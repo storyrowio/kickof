@@ -21,7 +21,7 @@ func main() {
 		log.Println("No .env file, will use system environment")
 	}
 
-	log.Println("Version: ", os.Getenv("MONGODB_URI"))
+	log.Println("Version: ", os.Getenv("VERSION"))
 
 	if !database.Init() {
 		log.Printf("Connected to MongoDB URI: Failure")
@@ -59,6 +59,8 @@ func main() {
 		api.POST("/activate", controllers.Activate)
 
 		api.GET("/page/:id", controllers.GetPageById)
+
+		api.POST("/blog-post", controllers.CreateBlogPost)
 
 		protected := api.Group("/", config.AuthMiddleware())
 		{
@@ -107,6 +109,17 @@ func main() {
 			protected.GET("/workspace/:id", controllers.GetWorkspaceById)
 			protected.PATCH("/workspace/:id", controllers.UpdateWorkspace)
 			protected.DELETE("/workspace/:id", controllers.DeleteWorkspace)
+
+			admin := protected.Group("/admin", config.AdminMiddleware())
+			{
+				admin.POST("/blog-topic", controllers.CreateManyBlogTopic)
+
+				admin.POST("/blog-post", controllers.CreateBlogPost)
+				admin.GET("/blog-post", controllers.GetBlogPosts)
+				admin.GET("/blog-post/:id", controllers.GetBlogPostById)
+				admin.PATCH("/blog-post/:id", controllers.UpdateBlogPost)
+				admin.DELETE("/blog-post/:id", controllers.DeleteBlogPost)
+			}
 		}
 	}
 

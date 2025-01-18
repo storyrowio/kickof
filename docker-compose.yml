@@ -8,8 +8,6 @@ services:
     image: ghcr.io/${GITHUB_REPOSITORY}/kickof-server:latest
     ports:
       - "8000:8000"
-#    environment:
-#      - NODE_ENV=production
     restart: unless-stopped
 
   web:
@@ -19,10 +17,6 @@ services:
     image: ghcr.io/${GITHUB_REPOSITORY}/kickof-web:latest
     ports:
       - "3000:3000"
-#    environment:
-#      - NODE_ENV=production
-#      - NEXT_PUBLIC_API_URL=http://server:8000
-#      - API_URL=http://server:8000
     depends_on:
       - server
     restart: unless-stopped

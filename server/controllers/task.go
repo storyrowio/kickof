@@ -64,7 +64,6 @@ func CreateTask(c *gin.Context) {
 		return
 	}
 
-	request.Id = uuid.New().String()
 	request.CreatedAt = time.Now()
 	request.UpdatedAt = time.Now()
 

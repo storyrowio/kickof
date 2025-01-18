@@ -12,6 +12,7 @@ import (
 	"kickof/models"
 	"log"
 	"mime/multipart"
+	"os"
 	"path/filepath"
 
 	"google.golang.org/api/drive/v3"
@@ -46,7 +47,7 @@ func UploadToCloudinary(fileHeader *multipart.FileHeader, path string) (*models.
 	defer file.Close()
 
 	resp, err := cld.Upload.Upload(context.Background(), file, uploader.UploadParams{
-		Folder:   "golang-skeleton" + "/" + path,
+		Folder:   os.Getenv("APP_NAME") + "/" + path,
 		PublicID: fileHeader.Filename,
 	})
 	if err != nil {

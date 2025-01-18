@@ -6,6 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"kickof/database"
+	"kickof/lib"
 	"kickof/models"
 	"net/http"
 	"time"
@@ -157,6 +158,7 @@ func GetUserSocials(userId string) []models.UserSocial {
 func CreateManyUser(params []models.User) (bool, error) {
 	data := make([]interface{}, 0)
 	for _, val := range params {
+		val.Password = lib.HashAndSalt(val.Password)
 		val.CreatedAt = time.Now()
 		val.UpdatedAt = time.Now()
 		data = append(data, val)

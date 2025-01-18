@@ -111,6 +111,19 @@
       "isDefault": true
     },
     {
+      "id": "44d28c27-79fd-48e1-bbb1-314fe2a946b0",
+      "code": "minio",
+      "name": "Minio",
+      "setting": {
+        "cloudinaryCloudName": "",
+        "cloudinaryKey": "",
+        "cloudinarySecret": ""
+      },
+      "type": "storage",
+      "status": true,
+      "isDefault": true
+    },
+    {
       "id": "0de44589-1e3d-4fc6-905f-8c8a891f4a7c",
       "code": "stripe",
       "name": "Stripe",

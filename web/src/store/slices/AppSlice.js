@@ -2,6 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 import {SettingTypes} from "constants/constants";
 
 const initialState = {
+    loaded: [],
     country: {},
     setting: {},
     workspaces: [],
@@ -14,6 +15,9 @@ export const AppSlice = createSlice({
     name: 'app',
     initialState,
     reducers: {
+        addLoadedData: (state, action) => {
+            state.loaded = [...state.loaded, action.payload];
+        },
         setCountry: (state, action) => {
             state.country = action.payload;
         },

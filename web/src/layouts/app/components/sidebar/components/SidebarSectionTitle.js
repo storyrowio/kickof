@@ -7,7 +7,7 @@ export default function SidebarSectionTitle({ title }) {
                 height: 38,
                 px: 7.5,
                 '& .MuiTypography-root, & svg': {
-                    color: 'text.secondary'
+                    color: 'text.secondary',
                 }
             }}>
             <Typography noWrap variant='caption' sx={{ textTransform: 'uppercase' }}>

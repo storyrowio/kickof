@@ -33,7 +33,7 @@ export const ThemeSlice = createSlice({
         setRightSidebarContent: (state, action) => {
             state.rightSideBarContent = action.payload;
         },
-        setShwoOnboardingDialog: (state, action) => {
+        setShowOnboardingDialog: (state, action) => {
             state.showOnboardingDialog = action.payload;
         }
     }

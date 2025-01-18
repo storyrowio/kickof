@@ -60,22 +60,27 @@ export default function TaskForm(props) {
             stateId: data?.stateId ?? '',
             labelIds: data?.labels ?? [],
             assigneeIds: data?.assignees ?? [],
+            // startDate: null,
+            // endDate: null
         },
+        enableReinitialize: true,
         onSubmit: values => handleSubmit(values)
     });
 
-    const mounted = useRef(false);
-    useEffect(() => {
-        if (!mounted.current && data?.id) {
-            data.startDate = (data?.startDate && moment(data?.startDate).get('year') !== 1) ? moment(data?.startDate) : null;
-            data.endDate = (data?.endDate && moment(data?.endDate).get('year') !== 1) ? moment(data?.endDate) : null;
-            data.labelIds = data.labels;
-            data.assigneeIds = data.assignees;
-
-            formik.setValues(data);
-            mounted.current = true;
-        }
-    }, [data]);
+    // const mounted = useRef(false);
+    // useEffect(() => {
+    //     if (!mounted.current && data?.id) {
+    //         // if (data?.startDate) data.startDate = moment(data?.startDate);
+    //         // if (data?.endDate) data.endDate = moment(data?.endDate);
+    //         // data.startDate = data?.startDate ? moment(data?.startDate) : null;
+    //         // data.endDate = data?.endDate ? moment(data?.endDate) : null;
+    //         data.labelIds = data.labels;
+    //         data.assigneeIds = data.assignees;
+    //
+    //         formik.setValues(data);
+    //         mounted.current = true;
+    //     }
+    // }, [data]);
 
     const handleSuccess = () => {
         dispatch(ThemeActions.setRightSidebarOpen(false));
@@ -108,7 +113,7 @@ export default function TaskForm(props) {
         return TaskService.deleteTask(data?.id)
             .then(() => handleSuccess());
     }
-
+    console.log(formik.values)
     return (
         <FormWrapper>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -181,7 +186,7 @@ export default function TaskForm(props) {
                             multiple
                             options={resLabels?.data}
                             getOptionLabel={(option) => option.label}
-                            value={formik.values?.labelIds}
+                            value={formik.values?.labelIds || []}
                             onChange={(e, val) =>
                                 formik.setFieldValue('labelIds', val)}
                             renderInput={(params) => (
