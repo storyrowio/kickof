@@ -26,7 +26,7 @@ export default function UpdatePage() {
                     {title: 'Update page'}
                 ]}/>
 
-            <PageForm data={resPage?.data}/>
+            <PageForm data={resPage?.data} mutate={mutate}/>
         </>
     )
 }

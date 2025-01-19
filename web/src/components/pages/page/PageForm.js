@@ -1,14 +1,14 @@
+'use client'
+
 import {useFormik} from "formik";
-import TaskService from "services/TaskService";
 import {useSelector} from "store";
 import PageService from "services/PageService";
 import {Box, Button, Card, CardContent, FormLabel, Stack, TextField} from "@mui/material";
-import QuillEditor from "components/forms/Editor/QuillEditor";
 import {useRouter} from "next/navigation";
 import {useEffect, useRef} from "react";
-import moment from "moment/moment";
+import {DynamicEditor} from "components/forms/BlockNote/DynamicEditor";
 
-export default function PageForm({ data }) {
+export default function PageForm({ data, mutate }) {
     const router = useRouter();
     const { project, workspace } = useSelector(state => state.app);
 
@@ -17,6 +17,7 @@ export default function PageForm({ data }) {
             title: data?.title ?? '',
             content: data?.content ?? '',
         },
+        enableReinitialize: true,
         onSubmit: values => handleSubmit(values)
     });
 
@@ -27,6 +28,10 @@ export default function PageForm({ data }) {
             mounted.current = true;
         }
     }, [data]);
+
+    const handleChangeContent = async (val) => {
+        await formik.setFieldValue('content', val);
+    }
 
     const submit = (params) => {
         if (data?.id) {
@@ -44,7 +49,12 @@ export default function PageForm({ data }) {
         };
 
         return submit(params)
-            .then(() => router.back());
+            .then(() => {
+                if (mutate) {
+                    mutate();
+                }
+                router.back();
+            });
     }
 
     return (
@@ -62,9 +72,13 @@ export default function PageForm({ data }) {
                         </Box>
                         <Box>
                             <FormLabel>Content</FormLabel>
-                            <QuillEditor
-                                onChange={(value) => formik.setFieldValue('content', value)}
-                                value={formik.values.content}/>
+                            <Card variant="outlined">
+                                <CardContent>
+                                    <DynamicEditor
+                                        onChangeHtml={async (val) => await handleChangeContent(val)}
+                                        value={formik.values.content}/>
+                                </CardContent>
+                            </Card>
                         </Box>
                         <Stack direction="row" justifyContent="end" spacing={3} sx={{ paddingTop: 4 }}>
                             <Button

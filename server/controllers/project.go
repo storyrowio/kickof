@@ -95,7 +95,6 @@ func UpdateProject(c *gin.Context) {
 	}
 
 	var request models.Project
-
 	err := c.ShouldBindJSON(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.Response{Data: err.Error()})

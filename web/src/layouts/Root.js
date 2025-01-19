@@ -14,6 +14,7 @@ import AuthService from "services/AuthService";
 import {AppActions} from "store/slices/AppSlice";
 import ProjectService from "services/ProjectService";
 import {ThemeActions} from "store/slices/ThemeSlice";
+import PageLayout from "layouts/PageLayout";
 
 const RootApp = ({ children }) => {
     const pathname = usePathname();
@@ -66,6 +67,8 @@ const RootApp = ({ children }) => {
         Layout = AuthLayout;
     } else if (pathname.includes('/app')) {
         Layout = AppLayout;
+    } else if (pathname.startsWith('/page')) {
+        Layout = PageLayout;
     }
 
     useEffect(() => {

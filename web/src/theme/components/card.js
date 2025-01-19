@@ -13,6 +13,10 @@ const Card = skin => {
           },
           '& .MuiTableContainer-root, & .MuiDataGrid-root, & .MuiDataGrid-columnHeaders': {
             borderRadius: 0
+          },
+          '&.MuiPaper-outlined': {
+            boxShadow: 'none',
+            borderColor: theme.palette.action.disabled
           }
         })
       },

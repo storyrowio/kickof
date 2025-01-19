@@ -11,7 +11,7 @@ const createProject = (params) => {
 
 const getProjectById = (id) => {
     return Api.Instance.get(`/project/${id}`)
-        .then(res => res.data);
+        .then(res => res.data?.data);
 };
 
 const getProjectByCode = (code) => {
@@ -23,12 +23,18 @@ const getProjectMember = (id) => {
     return Api.Instance.get(`/project/members/${id}`).then(res => res.data);
 };
 
+const updateProject = (id, params) => {
+    return Api.Instance.patch(`/project/${id}`, params)
+        .then(res => res.data);
+};
 
 const ProjectService = {
     getProjectsByQuery,
     createProject,
+    getProjectById,
     getProjectByCode,
-    getProjectMember
+    getProjectMember,
+    updateProject
 };
 
 export default ProjectService;

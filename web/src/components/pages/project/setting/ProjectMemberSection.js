@@ -38,7 +38,7 @@ export default function ProjectMemberSection() {
     const handleSubmit = () => {
         console.log(form.data)
     };
-    console.log(resRoles)
+
     return (
         <>
             <Card sx={{

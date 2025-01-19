@@ -2,7 +2,7 @@ import useBackgroundColor from "hooks/useBackgroundColor";
 import MuiChip from '@mui/material/Chip'
 
 export default function CustomChip(props) {
-    let { sx, skin, color, rounded } = props;
+    let { sx, color, rounded } = props;
 
     const bgColors = useBackgroundColor()
 
@@ -22,7 +22,10 @@ export default function CustomChip(props) {
             {...propsToPass}
             variant='filled'
             className={`${rounded && 'MuiChip-rounded'}`}
-            sx={skin === 'light' && color ? Object.assign(colors[color], sx) : sx}
+            sx={{
+                ...(color && {...colors[color]}),
+                ...sx
+            }}
         />
     )
 }

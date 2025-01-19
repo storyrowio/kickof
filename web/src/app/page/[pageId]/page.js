@@ -5,6 +5,7 @@ import useSWR from "swr";
 import PageService from "services/PageService";
 import {DefaultSort} from "constants/constants";
 import {useParams} from "next/navigation";
+import {useEffect, useRef} from "react";
 
 const ContentWrapper = styled(Card)(({ theme }) => ({
     padding: '1rem',
@@ -19,7 +20,7 @@ const ContentWrapper = styled(Card)(({ theme }) => ({
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
-    marginBottom: '3rem',
+    marginBottom: '2rem',
     fontWeight: 700,
     color: theme.palette.text.primary
 }))
@@ -32,6 +33,22 @@ export default function Page() {
         () => PageService.getPageBySlug(params?.pageId)
     );
 
+    const containerRef = useRef();
+    useEffect(() => {
+        const container = containerRef.current;
+        if (container) {
+            const elements = container.querySelectorAll("h2");
+            elements.forEach(el => {
+                el.style.minHeight = "33px";
+            });
+
+            const elementParagraph = container.querySelectorAll("p");
+            elementParagraph.forEach(el => {
+                el.style.minHeight = "22px";
+            })
+        }
+    }, [resPage]);
+
     return (
         <>
             <Container sx={{ paddingTop: 20 }}>
@@ -39,7 +56,7 @@ export default function Page() {
 
                 <ContentWrapper>
                     <CardContent>
-                        <div dangerouslySetInnerHTML={{__html: resPage?.data?.content}}/>
+                        <div ref={containerRef} dangerouslySetInnerHTML={{__html: resPage?.data?.content}}/>
                     </CardContent>
                 </ContentWrapper>
             </Container>

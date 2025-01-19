@@ -2,6 +2,7 @@ import {Avatar, Card, CardContent, Stack, Typography, useTheme} from "@mui/mater
 import {AvatarGroup} from "@mui/lab";
 import CustomChip from "components/chip/CustomChip";
 import {CardShadow} from "theme/shadows";
+import {HexToRGBA} from "utils/theme";
 
 export default function TaskCard(props) {
     const { task, ...rest } = props;
@@ -39,14 +40,15 @@ export default function TaskCard(props) {
                     {task.labels?.map((e, i) => (
                         <CustomChip
                             key={i}
-                            color={e.color !== '' ? e.color : theme.palette.primary.main}
                             label={e.label}
                             size="small"
                             sx={{
                                 height: 18,
+                                background: HexToRGBA(e.color, 0.08),
                                 '.MuiChip-label': {
                                     fontSize: 10,
-                                    fontWeight: 500
+                                    fontWeight: 500,
+                                    color: e.color,
                                 }
                             }}/>
                     ))}

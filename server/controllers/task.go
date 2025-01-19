@@ -118,6 +118,9 @@ func UpdateTask(c *gin.Context) {
 	}
 
 	var request models.Task
+
+	request.Id = id
+
 	err := c.ShouldBindJSON(&request)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.Response{Data: err.Error()})

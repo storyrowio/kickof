@@ -21,7 +21,7 @@ import QuillEditor from "components/forms/Editor/QuillEditor";
 import moment from "moment";
 import useSWR from "swr";
 import StateService from "services/StateService";
-import {DefaultSort} from "constants/constants";
+import {DefaultSort, LabelSort} from "constants/constants";
 import TaskLabelService from "services/TaskLabelService";
 import {Autocomplete} from "@mui/lab";
 import ProjectService from "services/ProjectService";
@@ -45,7 +45,7 @@ export default function TaskForm(props) {
         project?.id ? '/api/task-label' : null,
         () => TaskLabelService.getTaskLabelsByQuery({
             project: project?.id,
-            sort: DefaultSort.name.value
+            sort: LabelSort.label.value
         })
     )
 
@@ -113,7 +113,7 @@ export default function TaskForm(props) {
         return TaskService.deleteTask(data?.id)
             .then(() => handleSuccess());
     }
-    console.log(formik.values)
+
     return (
         <FormWrapper>
             <Stack direction="row" justifyContent="space-between" alignItems="center">

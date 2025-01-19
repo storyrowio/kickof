@@ -19,7 +19,7 @@ import {SketchPicker} from "react-color";
 import useSWR from "swr";
 import {useSelector} from "store";
 import {useParams} from "next/navigation";
-import {DefaultSort} from "constants/constants";
+import {DefaultSort, LabelSort} from "constants/constants";
 import TaskLabelService from "services/TaskLabelService";
 
 export default function ProjectLabelSection() {
@@ -27,12 +27,30 @@ export default function ProjectLabelSection() {
     const { workspace, project } = useSelector(state => state.app);
     const { data: resData, isLoading: loading, mutate } = useSWR(
         (params?.workspaceCode && workspace?.id) ? '/api/task-label' : null,
-        () => TaskLabelService.getTaskLabelsByQuery({workspace: workspace?.id, sort: DefaultSort.name.value}));
+        () => TaskLabelService.getTaskLabelsByQuery({workspace: workspace?.id, sort: LabelSort.label.value}));
 
     const [form, setForm] = useState({open: false, data: null});
+    const [loadingSubmit, setLoadingSubmit] = useState(false);
+
+    const submit = () => {
+        form.data.workspaceId = workspace.id;
+        form.data.projectId = project.id;
+
+        if (form.data?.id) {
+            return TaskLabelService.updateTaskLabel(form?.data?.id, form.data)
+        }
+
+        return TaskLabelService.createTaskLabel(form.data);
+    };
 
     const handleSubmit = () => {
-        console.log(form.data)
+        setLoadingSubmit(true);
+
+        return submit().then(() => {
+            setForm({open: false, data: null});
+            setLoadingSubmit(false);
+            mutate();
+        });
     };
 
     return (
@@ -117,7 +135,7 @@ export default function ProjectLabelSection() {
                     <Button color="default" onClick={() => setForm({open: false, data: null})}>
                         Cancel
                     </Button>
-                    <Button variant="contained" onClick={handleSubmit}>
+                    <Button disabled={loadingSubmit} variant="contained" onClick={handleSubmit}>
                         Submit
                     </Button>
                 </DialogActions>

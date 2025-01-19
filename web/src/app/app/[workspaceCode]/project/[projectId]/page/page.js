@@ -98,9 +98,11 @@ export default function ProjectPage() {
                                                 <TableCell>{row.title}</TableCell>
                                                 <TableCell align="right">
                                                     <Tooltip title="View">
-                                                        <IconButton onClick={() => router.push(`/page/${row.slug}`)}>
-                                                            <OpenInNewRounded fontSize="small" sx={{ color: 'text.secondary'}}/>
-                                                        </IconButton>
+                                                        <Link href={`/page/${row.slug}`} target="_blank">
+                                                            <IconButton>
+                                                                <OpenInNewRounded fontSize="small" sx={{ color: 'text.secondary'}}/>
+                                                            </IconButton>
+                                                        </Link>
                                                     </Tooltip>
                                                     <Tooltip title="Edit">
                                                         <IconButton onClick={() => router.push(`${pathname}/${row.id}/update`)}>
