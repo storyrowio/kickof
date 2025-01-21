@@ -60,6 +60,7 @@ func main() {
 
 		api.GET("/page/:id", controllers.GetPageById)
 
+		api.GET("/blog-post", controllers.GetBlogPosts)
 		api.POST("/blog-post", controllers.CreateBlogPost)
 
 		protected := api.Group("/", config.AuthMiddleware())
