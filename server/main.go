@@ -61,7 +61,7 @@ func main() {
 		api.GET("/page/:id", controllers.GetPageById)
 
 		api.GET("/blog-post", controllers.GetBlogPosts)
-		api.POST("/blog-post", controllers.CreateBlogPost)
+		api.GET("/blog-post/:id", controllers.GetBlogPostById)
 
 		protected := api.Group("/", config.AuthMiddleware())
 		{
@@ -114,10 +114,7 @@ func main() {
 			admin := protected.Group("/admin", config.AdminMiddleware())
 			{
 				admin.POST("/blog-topic", controllers.CreateManyBlogTopic)
-
 				admin.POST("/blog-post", controllers.CreateBlogPost)
-				admin.GET("/blog-post", controllers.GetBlogPosts)
-				admin.GET("/blog-post/:id", controllers.GetBlogPostById)
 				admin.PATCH("/blog-post/:id", controllers.UpdateBlogPost)
 				admin.DELETE("/blog-post/:id", controllers.DeleteBlogPost)
 			}

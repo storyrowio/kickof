@@ -22,7 +22,6 @@ export default function Dashboard() {
     const { workspaces } = useSelector(state => state.app);
     const { showOnboardingDialog } = useSelector(state => state.theme);
 
-    console.log(workspaces)
     const [widgets, setWidgets] = useState([
         { title: 'Projects', content: '1230', color: 'primary', icon: '/images/icons/dashboard-widget-1.svg' },
         { title: 'Members', content: '1230', color: 'secondary', icon: '/images/icons/dashboard-widget-2.svg' },
