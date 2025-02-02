@@ -27,9 +27,9 @@ const RootApp = ({ children }) => {
         setTimeout(async () => {
             await AuthService.GetProfile()
                 .then(async (res) => {
-                    if (res?.id) {
-                        dispatch(AppActions.addLoadedData('Profile'));
+                    dispatch(AppActions.addLoadedData('Profile'));
 
+                    if (res?.id) {
                         await WorkspaceService.getWorkspacesByQuery({user: res?.id})
                             .then(async (resWorkspace) => {
                                 dispatch(AppActions.addLoadedData('Workspaces'));
@@ -57,6 +57,8 @@ const RootApp = ({ children }) => {
                                 }
                             })
                     }
+                }).catch(() => {
+                    dispatch(AppActions.addLoadedData('Profile'));
                 })
         }, 3000);
     };

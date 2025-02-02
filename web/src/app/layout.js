@@ -27,16 +27,16 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
       <HolyLoader color="#757575"/>
       <SWRConfig value={{
-        revalidateIfStale: false,
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-        refreshInterval: 0,
+          revalidateIfStale: false,
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false,
+          refreshInterval: 0,
       }}>
-        <Provider store={store}>
-          <RootApp>
-            {children}
-          </RootApp>
-        </Provider>
+          <Provider store={store}>
+              <RootApp>
+                  {children}
+              </RootApp>
+          </Provider>
       </SWRConfig>
       </body>
       </html>

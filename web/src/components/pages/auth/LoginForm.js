@@ -23,12 +23,14 @@ import Link from "next/link";
 import {Google, VisibilityOffRounded, VisibilityRounded} from "@mui/icons-material";
 import Image from "next/image";
 import AuthService from "services/AuthService";
+import {useSelector} from "store";
 
 export default function LoginForm() {
     const theme = useTheme();
     const pathname = usePathname();
     const router = useRouter();
     const isOwner = pathname.includes('owner');
+    const { loaded } = useSelector(state => state.app);
     const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -123,7 +125,7 @@ export default function LoginForm() {
                         Forgot Password?
                     </Typography>
                 </Stack>
-                <Button fullWidth disabled={loading} type='submit' variant='contained' sx={{ mb: 4 }}>
+                <Button fullWidth disabled={loading || !loaded.includes('Profile')} type='submit' variant='contained' sx={{ mb: 4 }}>
                     Login
                 </Button>
                 <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -144,6 +146,7 @@ export default function LoginForm() {
                 </Divider>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Button
+                        disabled={!loaded.includes('Profile')}
                         color="primary"
                         startIcon={<Image src="/images/logos/social/google.svg" width={25} height={25} alt="logo"/>}
                         onClick={() => handleSocialLogin('google')}
