@@ -41,6 +41,14 @@ export default function TaskForm(props) {
     const mobile = useMediaQuery(theme => theme.breakpoints.down('sm'));
     const [deleteConfirm, setDeleteConfirm] = useState(false);
 
+    const { data: resState } = useSWR(
+        project?.id ? '/api/state' : null,
+        () => StateService.getStatesByQuery({
+            project: project?.id,
+            sort: DefaultSort.oldest.value
+        })
+    );
+
     const { data: resLabels } = useSWR(
         project?.id ? '/api/task-label' : null,
         () => TaskLabelService.getTaskLabelsByQuery({
@@ -175,7 +183,7 @@ export default function TaskForm(props) {
                             value={formik.values.stateId}
                             error={Boolean(formik.errors.stateId)}
                             helperText={formik.errors.stateId}>
-                            {states?.map((e, i) => (
+                            {resState?.data?.map((e, i) => (
                                 <MenuItem key={i} value={e.id}>{e.name}</MenuItem>
                             ))}
                         </Select>

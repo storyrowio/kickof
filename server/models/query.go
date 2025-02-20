@@ -19,6 +19,8 @@ type Query struct {
 	WorkspaceId string `form:"workspace"`
 	Assigned    string `form:"assigned"`
 	Completed   string `form:"completed"`
+	InProgress  string `form:"inProgress"`
+	Overdue     string `form:"overdue"`
 }
 
 type Pagination struct {

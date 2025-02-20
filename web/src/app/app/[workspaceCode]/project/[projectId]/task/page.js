@@ -81,7 +81,6 @@ export default function Task() {
                 </CardContent>
             </Card>
             <TaskKanban
-                states={resState?.data}
                 mutate={mutate}
                 onUpdate={handleUpdateTask}/>
         </>

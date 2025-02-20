@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"kickof/models"
 	"kickof/services"
 	"log"
@@ -24,7 +25,7 @@ func GetTasks(c *gin.Context) {
 	filters := query.GetQueryFind()
 
 	if query.UserId != "" {
-		filters["userIds"] = bson.M{
+		filters["assigneeIds"] = bson.M{
 			"$in": []string{query.UserId},
 		}
 	}
@@ -38,11 +39,26 @@ func GetTasks(c *gin.Context) {
 		}
 	}
 
-	if query.Completed == "true" {
-		state := services.GetState(bson.M{"name": "Done"}, nil)
-		if state != nil {
-			filters["stateId"] = state.Id
+	if query.Completed != "" {
+		state := services.GetState(bson.M{"type": models.CompletedStateType}, nil)
+		if query.Completed == "true" {
+			if state != nil {
+				filters["stateId"] = state.Id
+			}
+		} else if query.Completed == "false" {
+			filters["stateId"] = bson.M{"$ne": state.Id}
 		}
+	}
+
+	if query.InProgress == "true" {
+		inProgressState := services.GetState(bson.M{"type": models.InProgressStateType}, nil)
+		if inProgressState != nil {
+			filters["stateId"] = inProgressState.Id
+		}
+	}
+
+	if query.Overdue == "true" {
+		filters["endDate"] = bson.M{"$gte": primitive.NewDateTimeFromTime(time.Now())}
 	}
 
 	opts := query.GetOptions()

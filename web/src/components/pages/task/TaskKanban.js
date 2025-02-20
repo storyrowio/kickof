@@ -60,7 +60,7 @@ export default function TaskKanban({ states, mutate, onUpdate }) {
             <DragDropContext onDragEnd={onDragEnd}>
                 <KanbanWrapper>
                     {states?.map((state, i) => (
-                        <Box key={i} sx={{ minWidth: 300 }}>
+                        <Box key={i} sx={{ width: 300 }}>
                             <Typography variant="h6" gutterBottom>
                                 {state.name}
                             </Typography>

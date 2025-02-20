@@ -54,7 +54,7 @@ func GetTasksWithPagination(filters bson.M, opt *options.FindOptions, query mode
 	result := models.Result{
 		Data:       results,
 		Pagination: pagination,
-		Query:      query,
+		//Query:      query,
 	}
 
 	return result
